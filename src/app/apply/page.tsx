@@ -33,15 +33,20 @@ export default function ApplyPage() {
             
   name="coaching-application"
   method="POST"
-  action="/thank-you"
   data-netlify="true"
   netlify-honeypot="bot-field"
   className="space-y-8 rounded-[40px] border border-white/10 bg-[#13263A] p-8 md:p-14"
 >
-              <input
+<input
   type="hidden"
   name="form-name"
   value="coaching-application"
+/>
+
+<input
+  type="hidden"
+  name="redirect"
+  value="/thank-you"
 />
 
 <p className="hidden">
