@@ -1,8 +1,43 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
 
 export default function ApplyPage() {
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    setLoading(true);
+
+    const form = e.currentTarget;
+
+    const formData = new FormData(form);
+
+    try {
+      await fetch("/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams(
+          formData as unknown as Record<string, string>
+        ).toString(),
+      });
+
+      router.push("/thank-you");
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <main className="min-h-screen bg-[#0F1E2E] pt-40 text-white">
       <section className="pb-24">
@@ -30,31 +65,24 @@ export default function ApplyPage() {
             </div>
 
             <form
-            
-  name="coaching-application"
-  method="POST"
-  data-netlify="true"
-  netlify-honeypot="bot-field"
-  className="space-y-8 rounded-[40px] border border-white/10 bg-[#13263A] p-8 md:p-14"
->
-<input
-  type="hidden"
-  name="form-name"
-  value="coaching-application"
-/>
+              name="coaching-application"
+              data-netlify="true"
+              netlify-honeypot="bot-field"
+              onSubmit={handleSubmit}
+              className="space-y-8 rounded-[40px] border border-white/10 bg-[#13263A] p-8 md:p-14"
+            >
+              <input
+                type="hidden"
+                name="form-name"
+                value="coaching-application"
+              />
 
-<input
-  type="hidden"
-  name="redirect"
-  value="/thank-you"
-/>
-
-<p className="hidden">
-  <label>
-    Don’t fill this out:
-    <input name="bot-field" />
-  </label>
-</p>
+              <p className="hidden">
+                <label>
+                  Don’t fill this out:
+                  <input name="bot-field" />
+                </label>
+              </p>
 
               <div className="grid gap-6 md:grid-cols-2">
                 <div>
@@ -65,6 +93,7 @@ export default function ApplyPage() {
                   <input
                     type="text"
                     name="firstName"
+                    required
                     className="w-full rounded-2xl border border-white/10 bg-[#0F1E2E] px-5 py-4 text-white outline-none transition focus:border-[#C89B3C]"
                   />
                 </div>
@@ -77,6 +106,7 @@ export default function ApplyPage() {
                   <input
                     type="text"
                     name="lastName"
+                    required
                     className="w-full rounded-2xl border border-white/10 bg-[#0F1E2E] px-5 py-4 text-white outline-none transition focus:border-[#C89B3C]"
                   />
                 </div>
@@ -90,6 +120,7 @@ export default function ApplyPage() {
                 <input
                   type="email"
                   name="email"
+                  required
                   className="w-full rounded-2xl border border-white/10 bg-[#0F1E2E] px-5 py-4 text-white outline-none transition focus:border-[#C89B3C]"
                 />
               </div>
@@ -149,9 +180,10 @@ export default function ApplyPage() {
 
               <button
                 type="submit"
-                className="w-full rounded-full bg-[#C89B3C] px-8 py-5 text-lg font-semibold text-black transition duration-300 hover:scale-[1.02]"
+                disabled={loading}
+                className="w-full rounded-full bg-[#C89B3C] px-8 py-5 text-lg font-semibold text-black transition duration-300 hover:scale-[1.02] disabled:opacity-70"
               >
-                Submit Application
+                {loading ? "Submitting..." : "Submit Application"}
               </button>
             </form>
           </motion.div>
