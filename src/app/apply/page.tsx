@@ -71,8 +71,7 @@ await fetch("/", {
             <form
               name="coaching-application"
               data-netlify="true"
-              netlify-honeypot="bot-field"
-              onSubmit={handleSubmit}
+                            onSubmit={handleSubmit}
               className="space-y-8 rounded-[40px] border border-white/10 bg-[#13263A] p-8 md:p-14"
             >
               <input
@@ -81,12 +80,7 @@ await fetch("/", {
                 value="coaching-application"
               />
 
-              <p className="hidden">
-                <label>
-                  Don’t fill this out:
-                  <input name="bot-field" />
-                </label>
-              </p>
+              
 
               <div className="grid gap-6 md:grid-cols-2">
                 <div>
